@@ -6,7 +6,7 @@ if (document.readyState == 'loading'){
 
 function ready() {
     let removeCartItemButtons = document.getElementsByClassName('btn-danger');
-    for (let i = 0; i < removeCartItemButtons; i++){
+    for (let i = 0; i < removeCartItemButtons.length; i++){
     let button = removeCartItemButtons[i];
     button.addEventListener('click', removeCartItem)}
 
@@ -14,6 +14,12 @@ function ready() {
     for (let i = 0; i < quantityInputs.length; i++){
         let input = quantityInputs[i]
         input.addEventListener('change', quantityChanged)
+    }
+
+    let addToCartButtons = document.getElementsByClassName('shop-item-button')
+    for (let i = 0; i < addToCartButtons.length; i++) {
+        let button = addToCartButtons[i];
+        button.addEventListener('click', addToCartClicked)
     }
 }
 
@@ -31,9 +37,36 @@ function quantityChanged (event) {
     updateCartTotal()
 }
 
+function  addToCartClicked (event) {
+    let button = event.target
+    let shopItem = button.parentElement.parentElement
+    let title = shopItem.getElementsByClassName('shop-item-title')[0].innerText
+    let price = shopItem.getElementsByClassName('shop-item-price')[0].innerText
+    let imageSource = shopItem.getElementsByClassName('shop-item-img')[0].src
+
+    addItemToCart (title, price, imageSource)
+}
+
+function addItemToCart (title, price, imageSource) {
+    let cartRow = document.createElement('div')
+    let cartItems = document.getElementsByClassName('carrt-items')[0]
+    let cartRowContents = `
+        <div class="cart-item cart-column">
+            <img class="cart-item-image" src="Images/Shirt.png" width="100" height="100">
+            <span class="cart-item-title">T-Shirt</span>
+       </div>
+       <span class="cart-price cart-column">$19.99</span>
+       <div class="cart-quantity cart-column">
+           <input class="cart-quantity-input" type="number" value="1">
+           <button class="btn btn-danger" type="button">REMOVE</button>
+       </div>`
+       cartRow.innerHTML = cartRowContents
+    cartItems.appendChild(cartRow)
+}
+
 function updateCartTotal (){
     let cartItemContainer = document.getElementsByClassName('cart-itens')[0];
-    let cartRows = cartItemContainer.getElementsByClassName('cart-row')
+    let cartRows = document.getElementsByClassName('cart-row')
     let total = 0;
     for (let i = 0; i< cartRows; i++){
         let cartRow = cartRows[i];
